@@ -1,0 +1,26 @@
+<style>
+    .image-card {
+        perspective: 1000px;
+        transition: transform 0.5s;
+    }
+
+    .image-card.flipped .image-front {
+        transform: rotateY(180deg);
+    }
+
+    .image-card.flipped .image-back {
+        transform: rotateY(0deg);
+    }
+
+    .image-front, .image-back {
+        backface-visibility: hidden;
+    }
+
+    .image-front {
+        transform: rotateY(0deg);
+    }
+
+    .image-back {
+        transform: rotateY(-180deg);
+    }
+</style>

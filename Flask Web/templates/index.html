@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="text-center mb-4" style="font-family: SimSun, sans-serif; color: #007BFF; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Welcome to Your Text-Image Generator</h2>
+    <br>
+    <!--TODO: 第一张图片的Modal打不开-->
+    <!--  示例图片集  -->
+    <div class="image-gallery row">
+       <!--Avocado Armchair-->
+        <div class="col-md-4 mb-3">
+            <div class="image-card" data-title="Avocado Armchair" data-toggle="modal" data-target="#modalAvocado">
+                <div class="image-front">
+                    <img src="{{ url_for('static', filename='images/avocado armchair.webp') }}" alt="Avocado Armchair" class="img-fluid rounded">
+                </div>
+                <div class="image-back">
+                    <p>An armchair in the shape of an avocado</p>
+                </div>
+            </div>
+        </div>
+        <!--   Oil Painting    -->
+        <div class="col-md-4 mb-3">
+            <div class="image-card" data-title="Oil Painting" data-toggle="modal" data-target="#modalOilPainting">
+                <div class="image-front">
+                    <img src="{{ url_for('static', filename='images/oil painting.webp') }}" alt="Oil Painting" class="img-fluid rounded">
+                </div>
+                <div class="image-back">
+                    <p>An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula</p>
+                </div>
+            </div>
+        </div>
+       <!--   Monster    -->
+        <div class="col-md-4 mb-3">
+            <div class="image-card" data-title="Monster" data-toggle="modal" data-target="#modalMonster">
+                <div class="image-front">
+                    <img src="{{ url_for('static', filename='images/monster.webp') }}" alt="Monster" class="img-fluid rounded">
+                </div>
+                <div class="image-back">
+                    <p>A photo of a white fur monster standing in a purple room</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--示例图片集对应的Modal-->
+    <!-- Modal for Avocado Armchair -->
+    <div class="modal fade" id="modalAvocado" tabindex="-1" aria-labelledby="modalAvocadoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAvocadoLabel">Avocado Armchair</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ url_for('static', filename='images/avocado armchair.webp') }}" alt="Avocado Armchair" class="img-fluid">
+                    <p>An armchair in the shape of an avocado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Oil Painting -->
+    <div class="modal fade" id="modalOilPainting" tabindex="-1" aria-labelledby="modalOilPaintingLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalOilPaintingLabel">Oil Painting</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ url_for('static', filename='images/oil painting.webp') }}" alt="Oil Painting" class="img-fluid">
+                    <p>An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Monster -->
+    <div class="modal fade" id="modalMonster" tabindex="-1" aria-labelledby="modalMonsterLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMonsterLabel">Monster</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ url_for('static', filename='images/monster.webp') }}" alt="Monster" class="img-fluid">
+                    <p>A photo of a white fur monster standing in a purple room</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 20px;"> <!-- 添加外部包裹的<div>元素 -->
+        <!-- Prompt 输入表单 -->
+        <form method="post" action="{{ url_for('index') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="prompt" class="form-control" placeholder="Enter your prompt">
+                <button type="submit" class="btn btn-primary">Generate Image</button>
+            </div>
+        </form>
+    </div>
+
+    {% if generated_image_urls %}
+        <h3 class="mb-3">Generated Images</h3>
+        <div class="row">
+            {% for image_url in generated_image_urls %}
+            <div class="col-md-4 mb-3">
+                <img src="{{ image_url }}" alt="Generated Image" class="img-fluid rounded">
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if current_user.is_authenticated %}
+    <!-- ... -->
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+{% endblock %}
