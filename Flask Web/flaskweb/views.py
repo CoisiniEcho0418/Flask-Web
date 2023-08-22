@@ -1,78 +1,9 @@
-# coding=utf-8
-import os
-import sys
-import click
-import openai
+# 视图函数（路由）
+from flask import render_template, request, url_for, redirect, flash
+from flask_login import login_user, login_required, logout_user, current_user
 
-from flask import Flask, render_template,request, url_for, redirect, flash
-from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy  # 导入扩展类
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager,UserMixin,login_user,login_required, logout_user,current_user
-
-
-WIN = sys.platform.startswith('win')
-if WIN:  # 如果是 Windows 系统，使用三个斜线
-    prefix = 'sqlite:///'
-else:  # 否则使用四个斜线
-    prefix = 'sqlite:////'
-
-# TODO: 后期改为从文件或系统的环境变量中使用API密钥
-openai.api_key="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"
-
-# TODO: 后期部署的数据库存储方式也要修改
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'data.db') # data.db是用来存储信息的数据库表
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
-# 这个密钥的值在开发时可以随便设置。基于安全的考虑，在部署时应该设置为随机字符，且不应该明文写在代码里
-app.config['SECRET_KEY'] = 'dev'  # 等同于 app.secret_key = 'dev'
-# 在扩展类实例化前加载配置
-db = SQLAlchemy(app)  # 初始化扩展，传入程序实例 app
-# 导入Bootstrap类，并初始化
-bootstrap = Bootstrap(app)
-
-# 类设计
-# 用户类
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20))  # 用户名
-    password_hash = db.Column(db.String(128))  # 密码散列值
-
-    def set_password(self, password):  # 用来设置密码的方法，接受密码作为参数
-        self.password_hash = generate_password_hash(password)  # 将生成的密码保持到对应字段
-
-    def validate_password(self, password):  # 用于验证密码的方法，接受密码作为参数
-        return check_password_hash(self.password_hash, password)  # 返回布尔值
-
-
-# 命令行执行的initdb函数
-@app.cli.command()  # 注册为命令，可以传入 name 参数来自定义命令
-@click.option('--drop', is_flag=True, help='Create after drop.')  # 设置选项
-def initdb(drop):
-    """Initialize the database."""
-    if drop:  # 判断是否输入了选项
-        db.drop_all()
-    db.create_all()
-    click.echo('Initialized database.')  # 输出提示信息
-
-
-# 模板上下文处理函数
-@app.context_processor
-def inject_user():  # 函数名可以随意修改
-    return dict(user=current_user)
-
-# 404处理函数
-@app.errorhandler(404)  # 传入要处理的错误代码
-def page_not_found(e):  # 接受异常对象作为参数
-    return render_template('404.html'), 404  # 返回模板和状态码
-
-login_manager = LoginManager(app)  # 实例化扩展类
-login_manager.login_view = 'login'
-# 登录函数
-@login_manager.user_loader
-def load_user(user_id):  # 创建用户加载回调函数，接受用户 ID 作为参数
-    user = User.query.get(int(user_id))  # 用 ID 作为 User 模型的主键查询对应的用户
-    return user  # 返回用户对象
+from flaskweb import app, db
+from flaskweb.models import User
 
 # 用户登录模块
 @app.route('/login', methods=['GET', 'POST'])
@@ -180,9 +111,3 @@ def index():
         return render_template('index.html', prompt=prompt, generated_image_urls=generated_image_urls)
 
     return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-
-
