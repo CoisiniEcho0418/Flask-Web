@@ -1,6 +1,6 @@
 # 视图函数（路由）
 from flask import render_template, request, url_for, redirect, flash
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 
 from flaskweb import app, db
 from flaskweb.models import User

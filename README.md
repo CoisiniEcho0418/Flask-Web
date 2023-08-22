@@ -1,4 +1,4 @@
 # Flask-Web
 a flask web about text-image generator
 
-主要文件包含在Flask Web目录下，用Pycharm运行其中的app.py文件即可在http://localhost:5000(url)访问到网页
+由于项目部署上线，代码部分转移至新仓库：https://github.com/CoisiniEcho0418/online-flaskweb

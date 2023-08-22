@@ -6,7 +6,7 @@ import openai
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy  # 导入扩展类
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 WIN = sys.platform.startswith('win')
 if WIN:  # 如果是 Windows 系统，使用三个斜线
